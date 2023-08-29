@@ -1,0 +1,10 @@
+{
+    "development": {
+      "username": "MOBILIS",
+      "password": "titanic@1912",
+      "database": "floorplanner_db",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    }
+  }
+  
