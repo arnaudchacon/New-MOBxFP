@@ -1,8 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = 3000;
 const db = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello, World!');
