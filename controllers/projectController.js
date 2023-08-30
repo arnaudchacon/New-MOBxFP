@@ -1,5 +1,5 @@
 const Project = require('../models/project');
-const { createFloorplan } = require('../services/floorplannerService');  // New import
+const { createFloorplan, editFloorplan, deleteFloorplan } = require('../services/floorplannerService');  // Updated import
 
 exports.createProject = async (req, res) => {
   try {
@@ -54,6 +54,9 @@ exports.editProject = async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
+    // Update the project in Floorplanner
+    const floorplannerResponse = await editFloorplan(project.floorplannerId, name, description);  // New line
+
     project.name = name;
     project.description = description;
     await project.save();
@@ -75,6 +78,9 @@ exports.deleteProject = async (req, res) => {
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
+
+    // Delete the project in Floorplanner
+    await deleteFloorplan(project.floorplannerId);  // New line
 
     await project.destroy();
 
