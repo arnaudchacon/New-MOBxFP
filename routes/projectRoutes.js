@@ -7,4 +7,10 @@ const upload = require('../middleware/uploadMiddleware');
 router.post('/create', auth, upload.single('floorPlan'), projectController.createProject);
 router.get('/list', auth, projectController.getProjects);  // Changed this line
 
+// Route to edit a project
+router.put('/edit/:id', auth, projectController.editProject);
+
+// Route to delete a project
+router.delete('/delete/:id', auth, projectController.deleteProject);
+
 module.exports = router;

@@ -41,4 +41,45 @@ exports.getProjects = async (req, res) => {
   }
 };
 
-// Add more methods for editing and deleting projects later
+// Method to edit a project
+exports.editProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    const userId = req.user.userId;
+
+    const project = await Project.findOne({ where: { id, userId } });
+
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    project.name = name;
+    project.description = description;
+    await project.save();
+
+    res.status(200).json({ message: 'Project updated successfully', project });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating project', error });
+  }
+};
+
+// Method to delete a project
+exports.deleteProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.userId;
+
+    const project = await Project.findOne({ where: { id, userId } });
+
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    await project.destroy();
+
+    res.status(200).json({ message: 'Project deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting project', error });
+  }
+};
