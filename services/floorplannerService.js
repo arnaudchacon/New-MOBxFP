@@ -22,6 +22,30 @@ const createFloorplan = async (name, description) => {
   }
 };
 
+// Function to edit an existing floorplan  // New function
+const editFloorplan = async (floorplannerId, name, description) => {
+  try {
+    const response = await floorplannerAPI.put(`/projects/${floorplannerId}`, {
+      name,
+      description
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Function to delete an existing floorplan  // New function
+const deleteFloorplan = async (floorplannerId) => {
+  try {
+    await floorplannerAPI.delete(`/projects/${floorplannerId}`);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
-  createFloorplan
+  createFloorplan,
+  editFloorplan,  // New export
+  deleteFloorplan  // New export
 };
