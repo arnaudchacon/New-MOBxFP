@@ -13,4 +13,7 @@ router.put('/edit/:id', auth, projectController.editProject);
 // Route to delete a project
 router.delete('/delete/:id', auth, projectController.deleteProject);
 
+// Route to convert a project to Vloor
+router.post('/convert-to-vloor/:id', auth, projectController.convertToVloor);
+
 module.exports = router;

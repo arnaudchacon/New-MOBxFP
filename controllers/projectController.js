@@ -1,5 +1,6 @@
 const Project = require('../models/project');
 const { createFloorplan, editFloorplan, deleteFloorplan } = require('../services/floorplannerService');  // Updated import
+const { createVloorOrder } = require('../services/floorplannerService');  // New import
 
 exports.createProject = async (req, res) => {
   try {
@@ -87,5 +88,26 @@ exports.deleteProject = async (req, res) => {
     res.status(200).json({ message: 'Project deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting project', error });
+  }
+};
+
+// Method to convert a project to Vloor  // New method
+exports.convertToVloor = async (req, res) => {
+  try {
+    const { id } = req.params;  // Project ID from the URL
+    const { image, imageType, width, name } = req.body;  // Parameters from the request body
+
+    // Call the createVloorOrder function
+    const vloorResponse = await createVloorOrder(id, image, imageType, width, name);
+
+    res.status(200).json({
+      message: 'Vloor conversion initiated successfully',
+      vloorResponse
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error initiating Vloor conversion',
+      error
+    });
   }
 };
