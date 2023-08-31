@@ -1,29 +1,26 @@
 const Project = require('../models/project');
-const { createFloorplan, editFloorplan, deleteFloorplan } = require('../services/floorplannerService');  // Updated import
-const { createVloorOrder } = require('../services/floorplannerService');  // New import
+const { createFloorplan, editFloorplan, deleteFloorplan, createVloorOrder } = require('../services/floorplannerService');  // Updated import
 
+// Create a new project
 exports.createProject = async (req, res) => {
   try {
     const { name, description } = req.body;
     const userId = req.user.userId;  // from JWT
-    const floorPlan = req.file.path;  // New line to handle the uploaded file
 
     // Create a new floorplan on Floorplanner
-    const floorplannerResponse = await createFloorplan(name, description);  // New line
+    const floorplannerResponse = await createFloorplan(name, description);  // Updated line
 
     const project = await Project.create({
       name,
       description,
       userId,
-      floorPlan,  // New line to save the file path in the database
-      floorplannerId: floorplannerResponse.id  // New line to save Floorplanner project ID
+      floorplannerId: floorplannerResponse.id  // Updated line to save Floorplanner project ID
     });
 
     res.status(201).json({
       message: 'Project created successfully',
       projectId: project.id,
-      floorPlan: floorPlan,  // Optionally return the file path
-      floorplannerId: floorplannerResponse.id  // Optionally return Floorplanner project ID
+      floorplannerId: floorplannerResponse.id  // Updated line to return Floorplanner project ID
     });
   } catch (error) {
     res.status(500).json({
@@ -33,6 +30,7 @@ exports.createProject = async (req, res) => {
   }
 };
 
+// Get all projects for a user
 exports.getProjects = async (req, res) => {
   try {
     const projects = await Project.findAll({ where: { userId: req.user.userId } });
@@ -42,7 +40,7 @@ exports.getProjects = async (req, res) => {
   }
 };
 
-// Method to edit a project
+// Edit an existing project
 exports.editProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -56,7 +54,7 @@ exports.editProject = async (req, res) => {
     }
 
     // Update the project in Floorplanner
-    const floorplannerResponse = await editFloorplan(project.floorplannerId, name, description);  // New line
+    const floorplannerResponse = await editFloorplan(project.floorplannerId, name, description);  // Updated line
 
     project.name = name;
     project.description = description;
@@ -68,7 +66,7 @@ exports.editProject = async (req, res) => {
   }
 };
 
-// Method to delete a project
+// Delete a project
 exports.deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -81,7 +79,7 @@ exports.deleteProject = async (req, res) => {
     }
 
     // Delete the project in Floorplanner
-    await deleteFloorplan(project.floorplannerId);  // New line
+    await deleteFloorplan(project.floorplannerId);  // Updated line
 
     await project.destroy();
 
@@ -91,23 +89,23 @@ exports.deleteProject = async (req, res) => {
   }
 };
 
-// Method to convert a project to Vloor  // New method
+// Convert a project to Vloor  // New method
 exports.convertToVloor = async (req, res) => {
   try {
     const { id } = req.params;  // Project ID from the URL
     const { image, imageType, width, name } = req.body;  // Parameters from the request body
 
     // Call the createVloorOrder function
-    const vloorResponse = await createVloorOrder(id, image, imageType, width, name);
+    const vloorResponse = await createVloorOrder(id, image, imageType, width, name);  // New line
 
     res.status(200).json({
       message: 'Vloor conversion initiated successfully',
-      vloorResponse
+      vloorResponse  // New line
     });
   } catch (error) {
     res.status(500).json({
       message: 'Error initiating Vloor conversion',
-      error
+      error  // New line
     });
   }
 };
