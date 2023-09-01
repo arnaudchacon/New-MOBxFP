@@ -16,4 +16,14 @@ router.delete('/delete/:id', auth, projectController.deleteProject);
 // Route to convert a project to Vloor
 //router.post('/convert-to-vloor/:id', auth, projectController.convertToVloor);
 
+router.delete('/deleteAll', async (req, res) => {
+    try {
+        await Project.destroy({ where: {} });
+        res.json({ message: "All projects deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "An error occurred", error });
+    }
+});
+
+
 module.exports = router;
