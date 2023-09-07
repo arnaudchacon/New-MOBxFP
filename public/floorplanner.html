@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    </head>
+    <body>
+        <div id="fp-editor-container" style="width: 1000px; height: 800px;"></div>
+        <script data-floorplanner-editor src="https://fp-editor-cdn.floorplanner.com/embed.js" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            // Fetch project-specific token from your server before initializing the editor
+            fetch('/fetch-project-token')
+            .then(response => response.json())
+            .then(data => {
+                initFPEditor({
+                    projectId: 145914738,  // Replace with your actual Project ID
+                    mountSelector: '#fp-editor-container',
+                    user: {
+                        id: 78673989,  // Replace with your actual User ID
+                        auth_token: data.projectToken,  // Use the fetched project token here
+                        permissions: ['save'],
+                    },
+                    language: 'en-US',
+                }).then(api => (window.api = api));
+            })
+            .catch(err => console.error("Error fetching project token:", err));
+        </script>
+    </body>
+</html>
