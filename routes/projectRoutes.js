@@ -4,26 +4,35 @@ const projectController = require('../controllers/projectController');
 const auth = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
-router.post('/create', auth, upload.single('floorPlan'), projectController.createProject);
-router.get('/list', auth, projectController.getProjects);  // Changed this line
+router.post('/create', auth, upload.single('floorPlan'), (req, res, next) => {
+  console.log("Request in /create:", req.body, req.file);
+  next();
+}, projectController.createProject);
 
-// Route to edit a project
-router.put('/edit/:id', auth, projectController.editProject);
+router.get('/list', auth, (req, res, next) => {
+  console.log("Request in /list:", req.query);
+  next();
+}, projectController.getProjects);
 
-// Route to delete a project
-router.delete('/delete/:id', auth, projectController.deleteProject);
+router.put('/edit/:id', auth, (req, res, next) => {
+  console.log("Request in /edit/:id:", req.params.id, req.body);
+  next();
+}, projectController.editProject);
 
-// Route to convert a project to Vloor
-//router.post('/convert-to-vloor/:id', auth, projectController.convertToVloor);
+router.delete('/delete/:id', auth, (req, res, next) => {
+  console.log("Request in /delete/:id:", req.params.id);
+  next();
+}, projectController.deleteProject);
 
 router.delete('/deleteAll', async (req, res) => {
-    try {
-        await Project.destroy({ where: {} });
-        res.json({ message: "All projects deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "An error occurred", error });
-    }
+  try {
+    console.log("Request in /deleteAll:");
+    await Project.destroy({ where: {} });
+    res.json({ message: "All projects deleted successfully" });
+  } catch (error) {
+    console.log("Error in /deleteAll:", error);
+    res.status(500).json({ message: "An error occurred", error });
+  }
 });
-
 
 module.exports = router;

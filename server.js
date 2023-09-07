@@ -1,43 +1,42 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');  // Import CORS package
-const path = require('path');  // Import Path package
-const session = require('express-session');  // Import Session package
-const passport = require('passport');  // Import Passport package
-const OAuth2Strategy = require('passport-oauth2');  // Import OAuth2Strategy package
+const cors = require('cors');
+const path = require('path');
+const session = require('express-session');
+const passport = require('passport');
+const OAuth2Strategy = require('passport-oauth2');
+const fetch = require('node-fetch');  // Make sure you've installed this
 const app = express();
 const PORT = 3000;
 const db = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 
-// Enable CORS for all routes
+console.log("Environment Variables:", process.env.FLOORPLANNER_CLIENT_ID, process.env.FLOORPLANNER_CLIENT_SECRET);
+
 app.use(cors());
-
-// Middleware for parsing JSON request bodies
 app.use(express.json());
-
-// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Initialize Session
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-fallback-secret-key',  // Choose a strong secret key
+  secret: process.env.SESSION_SECRET || 'your-fallback-secret-key',
   resave: false,
   saveUninitialized: true
 }));
 
-
-// Initialize Passport and session support
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport Configuration
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
 passport.serializeUser((user, done) => {
+  console.log("Serializing user:", user);
   done(null, user);
 });
 
 passport.deserializeUser((obj, done) => {
+  console.log("Deserializing object:", obj);
   done(null, obj);
 });
 
@@ -50,14 +49,29 @@ passport.use('provider', new OAuth2Strategy({
   state: true
 },
 (accessToken, refreshToken, profile, done) => {
-  // Store the accessToken in session
+  console.log("Access Token:", accessToken);
+  console.log("Profile:", profile);
   if (profile) {
     profile.accessToken = accessToken;
   }
   return done(null, profile);
 }));
 
-// Define Routes
+async function fetchProjectToken(projectId, oauthToken) {
+  const response = await fetch(`https://floorplanner.com/api/v2/projects/${projectId}/token.json`, {
+      method: 'GET',
+      headers: {
+          'Authorization': `Bearer ${oauthToken}`,
+          'Accept': 'application/json'
+      }
+  });
+  const data = await response.json();
+  if (!data.token) {
+      throw new Error('Failed to fetch project token from Floorplanner');
+  }
+  return data.token;
+}
+
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
@@ -67,23 +81,54 @@ app.get('/auth/provider', passport.authenticate('provider'));
 app.get('/floorplanner/callback', 
   passport.authenticate('provider', { failureRedirect: '/' }),
   (req, res) => {
-    // The OAuth accessToken is now stored in req.session.passport.user.accessToken
-    res.redirect('/');  // Redirect to wherever you want after a successful OAuth login
+    console.log("User object after OAuth callback:", req.session.passport.user);
+    res.redirect('/floorplanner-editor');
   }
 );
+app.get('/fetch-project-token', async (req, res) => {
+  const oauthToken = req.session?.passport?.user?.accessToken;
+  const projectId = 145411566;  // This should ideally be dynamic, based on your application's logic
 
-// Use the user routes
+  if (!oauthToken) {
+    return res.status(400).json({ message: 'OAuth token not found.' });
+  }
+
+  try {
+      const projectToken = await fetchProjectToken(projectId, oauthToken);
+      return res.json({ projectToken });
+  } catch (error) {
+      return res.status(500).json({ message: error.message });
+  }
+});
+
+app.get('/floorplanner', (req, res) => {
+  console.log("Session in /floorplanner:", req.session);
+  const authToken = req.session?.passport?.user?.accessToken;
+  if (!authToken) {
+    return res.redirect('/auth/provider');
+  }
+  res.sendFile(path.join(__dirname, 'public', 'floorplanner.html'));
+});
+
+app.get('/floorplanner-editor', (req, res) => {
+  console.log("Session in /floorplanner-editor:", req.session);
+  if (!req.session.passport || !req.session.passport.user) {
+    return res.status(401).send('Unauthorized. Please login first.');
+  }
+  const authToken = req.session.passport.user.accessToken;
+  if (!authToken || typeof authToken !== 'string') {
+    return res.status(500).send('Invalid authentication token.');
+  }
+  res.render('FloorplannerEditor', { authToken });
+});
+
 app.use('/user', userRoutes);
-
-// Use the project routes
 app.use('/project', projectRoutes);
 
-// Start the Server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// Database Authentication
 db.authenticate()
   .then(() => {
     console.log('Database connected...');
