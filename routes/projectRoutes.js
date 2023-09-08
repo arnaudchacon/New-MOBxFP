@@ -4,35 +4,25 @@ const projectController = require('../controllers/projectController');
 const auth = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
-router.post('/create', auth, upload.single('floorPlan'), (req, res, next) => {
-  console.log("Request in /create:", req.body, req.file);
-  next();
-}, projectController.createProject);
+// Middleware for logging requests
+const logRequest = (req, res, next) => {
+    console.log(`Request to ${req.path}:`, req.body, req.file || req.query);
+    next();
+};
 
-router.get('/list', auth, (req, res, next) => {
-  console.log("Request in /list:", req.query);
-  next();
-}, projectController.getProjects);
+router.use(logRequest);  // Apply logging middleware to all routes below
 
-router.put('/edit/:id', auth, (req, res, next) => {
-  console.log("Request in /edit/:id:", req.params.id, req.body);
-  next();
-}, projectController.editProject);
+// Route for a project specific token
+router.get('/fetch-project-token/:id', auth, projectController.fetchProjectToken);
 
-router.delete('/delete/:id', auth, (req, res, next) => {
-  console.log("Request in /delete/:id:", req.params.id);
-  next();
-}, projectController.deleteProject);
+router.post('/create', auth, upload.single('floorPlan'), projectController.createProject);
 
-router.delete('/deleteAll', async (req, res) => {
-  try {
-    console.log("Request in /deleteAll:");
-    await Project.destroy({ where: {} });
-    res.json({ message: "All projects deleted successfully" });
-  } catch (error) {
-    console.log("Error in /deleteAll:", error);
-    res.status(500).json({ message: "An error occurred", error });
-  }
-});
+router.get('/list', auth, projectController.getProjects);
+
+router.put('/edit/:id', auth, projectController.editProject);
+
+router.delete('/delete/:id', auth, projectController.deleteProject);
+
+// router.delete('/delete/:id', auth, projectController.deleteProject);
 
 module.exports = router;

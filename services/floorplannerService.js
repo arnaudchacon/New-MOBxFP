@@ -69,5 +69,6 @@ module.exports = {
   createFloorplan,
   editFloorplan,
   deleteFloorplan,
-  createVloorOrder  // New export
+  createVloorOrder,  // New export
+  basicAuth           // Add this line to export basicAuth
 };
