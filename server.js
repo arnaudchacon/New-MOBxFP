@@ -27,8 +27,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 passport.serializeUser((user, done) => {
   console.log("Serializing user:", user);
@@ -76,6 +76,10 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
+app.get('/test',(req, res) => {
+  res.render("test",{testData: "this is a test"})
+})
+
 app.get('/auth/provider', passport.authenticate('provider'));
 
 app.get('/floorplanner/callback', 
@@ -85,9 +89,12 @@ app.get('/floorplanner/callback',
     res.redirect('/floorplanner-editor');
   }
 );
+
 app.get('/fetch-project-token', async (req, res) => {
   const oauthToken = req.session?.passport?.user?.accessToken;
   const projectId = 145411566;  // This should ideally be dynamic, based on your application's logic
+
+  console.log("Fetching project token with OAuth token:", oauthToken);  // Log the OAuth token here
 
   if (!oauthToken) {
     return res.status(400).json({ message: 'OAuth token not found.' });
@@ -95,8 +102,10 @@ app.get('/fetch-project-token', async (req, res) => {
 
   try {
       const projectToken = await fetchProjectToken(projectId, oauthToken);
+      console.log("Fetched project token:", projectToken);  // Log the fetched project token here
       return res.json({ projectToken });
   } catch (error) {
+      console.error("Error fetching project token:", error.message);  // Enhanced logging
       return res.status(500).json({ message: error.message });
   }
 });
@@ -119,7 +128,8 @@ app.get('/floorplanner-editor', (req, res) => {
   if (!authToken || typeof authToken !== 'string') {
     return res.status(500).send('Invalid authentication token.');
   }
-  res.render('FloorplannerEditor', { authToken });
+  console.log(`-------------------- ${authToken} ------------------`);
+  res.render('floorplannerEditor', { authToken });  // Removed the test variable
 });
 
 app.use('/user', userRoutes);

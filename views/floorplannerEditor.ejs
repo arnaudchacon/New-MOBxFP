@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html>
     <head>
-      <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-      <meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+        <meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+        <style>
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: #f3f4f6;
+            }
+
+            #fp-editor-container {
+                width: 90vw;  /* Adjust this value for the desired width */
+                height: 90vh; /* Adjust this value for the desired height */
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+                border-radius: 10px;
+            }
+        </style>
     </head>
     <body>
-        <div id="fp-editor-container" style="width: 1000px; height: 800px;"></div>
+        <div id="fp-editor-container"></div>
         <script data-floorplanner-editor src="https://fp-editor-cdn.floorplanner.com/embed.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
+            // Set the authToken in localStorage when the page loads
+            localStorage.setItem('authToken', '<%= authToken %>');
+
             // Function to fetch the project-specific token and initialize the editor
             function initializeEditor() {
-                fetch('/fetch-project-token')
+                fetch('/fetch-project-token', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                })
                 .then(response => response.json())
                 .then(data => {
                     const projectToken = data.projectToken;
@@ -22,10 +46,9 @@
                         projectId: 145411566,
                         mountSelector: '#fp-editor-container',
                         user: {
-                            id: 78673989,
-                            auth_token: projectToken,
-                            permissions: ['save'],
+                            permissions: ['save', 'export', 'hd', 'ntl'],
                         },
+                        projectAccessToken: projectToken,  // Use projectAccessToken here
                         language: 'en-US',
                     }).then(api => (window.api = api));
                 })
@@ -34,6 +57,6 @@
 
             // Call the function to start the process
             initializeEditor();
-         </script>
+        </script>
     </body>
 </html>
