@@ -9,12 +9,14 @@
         <div id="fp-editor-container" style="width: 1000px; height: 800px;"></div>
         <script data-floorplanner-editor src="https://fp-editor-cdn.floorplanner.com/embed.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            const PROJECT_ID = 145914738;  // This is your hardcoded Project ID
+            // Dynamically get the Project ID from the URL's query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const PROJECT_ID = urlParams.get('projectId');
 
             console.log("Initializing Floorplanner Editor for Project ID:", PROJECT_ID);
 
             // Fetch project-specific token from your server before initializing the editor
-            fetch('/fetch-project-token/145914738')
+            fetch(`/fetch-project-token?projectId=${PROJECT_ID}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Failed to fetch project token: ${response.statusText}`);
@@ -31,7 +33,7 @@
                         user: {
                             permissions: ['save', 'export', 'hd', 'ntl'],
                         },
-                        projectAccessToken: data.projectToken,  // Use the new projectAccessToken property
+                        projectAccessToken: data.projectToken,
                         language: 'en-US',
                     })
                     .then(api => (window.api = api))

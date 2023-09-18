@@ -5,14 +5,13 @@ const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
 const OAuth2Strategy = require('passport-oauth2');
-const fetch = require('node-fetch');  // Make sure you've installed this
+const fetch = require('node-fetch');
 const app = express();
 const PORT = 3000;
 const db = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
-
-console.log("Environment Variables:", process.env.FLOORPLANNER_CLIENT_ID, process.env.FLOORPLANNER_CLIENT_SECRET);
+let currentAccessToken = null;
 
 app.use(cors());
 app.use(express.json());
@@ -31,12 +30,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 passport.serializeUser((user, done) => {
-  console.log("Serializing user:", user);
   done(null, user);
 });
 
 passport.deserializeUser((obj, done) => {
-  console.log("Deserializing object:", obj);
   done(null, obj);
 });
 
@@ -49,8 +46,6 @@ passport.use('provider', new OAuth2Strategy({
   state: true
 },
 (accessToken, refreshToken, profile, done) => {
-  console.log("Access Token:", accessToken);
-  console.log("Profile:", profile);
   if (profile) {
     profile.accessToken = accessToken;
   }
@@ -72,6 +67,7 @@ async function fetchProjectToken(projectId, oauthToken) {
   return data.token;
 }
 
+// Routes
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
@@ -86,13 +82,16 @@ app.get('/floorplanner/callback',
   passport.authenticate('provider', { failureRedirect: '/' }),
   (req, res) => {
     console.log("User object after OAuth callback:", req.session.passport.user);
-    res.redirect('/floorplanner-editor');
+    
+    // Store the access token in the global variable
+    currentAccessToken = req.session.passport.user.accessToken;
+
+    res.redirect('/dashboard');  // Redirect to dashboard after successful authentication
   }
 );
 
 app.get('/fetch-project-token', async (req, res) => {
-  const oauthToken = req.session?.passport?.user?.accessToken;
-  const projectId = 145411566;  // This should ideally be dynamic, based on your application's logic
+  const oauthToken = currentAccessToken;  // Use the stored access token
 
   console.log("Fetching project token with OAuth token:", oauthToken);  // Log the OAuth token here
 
@@ -110,30 +109,105 @@ app.get('/fetch-project-token', async (req, res) => {
   }
 });
 
+app.post('/create-floorplanner-project', async (req, res) => {
+  // Use the stored access token
+  const accessToken = currentAccessToken;
+
+  if (!accessToken) {
+      return res.status(401).json({ message: "Not Authenticated" });
+  }
+
+  try {
+      // Create a new project on Floorplanner
+      const response = await fetch('https://floorplanner.com/api/v2/projects.json', {
+          method: 'POST',
+          headers: {
+              'accept': 'application/json',
+              'content-type': 'application/json',
+              'Authorization': `Bearer ${accessToken}`  // Use Bearer token for authorization
+          },
+          body: JSON.stringify({
+              project: {
+                  name: req.body.name,
+                  description: req.body.description
+              }
+          })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+          console.error("Error creating project:", data);
+          return res.status(response.status).json(data);
+      } else {
+          // Fetch project-specific token for the created project
+          const projectTokenResponse = await fetch(`https://floorplanner.com/api/v2/projects/${data.id}/token.json`, {
+              method: 'GET',
+              headers: {
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Accept': 'application/json'
+              }
+          });
+
+          const projectTokenData = await projectTokenResponse.json();
+          if (!projectTokenData.token) {
+              throw new Error('Failed to fetch project token from Floorplanner');
+          }
+
+          // Redirect to the Floorplanner editor with the new project ID and token
+          return res.json({ 
+            editorUrl: `/floorplanner-editor?projectId=${data.id}&projectToken=${projectTokenData.token}`
+          });
+      }
+  } catch (error) {
+      console.error("Unexpected error:", error.message);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 app.get('/floorplanner', (req, res) => {
   console.log("Session in /floorplanner:", req.session);
-  const authToken = req.session?.passport?.user?.accessToken;
+  
+  // Use the stored access token
+  const authToken = currentAccessToken;
+
   if (!authToken) {
     return res.redirect('/auth/provider');
   }
+
   res.sendFile(path.join(__dirname, 'public', 'floorplanner.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.render('dashboard');
 });
 
 app.get('/floorplanner-editor', (req, res) => {
   console.log("Session in /floorplanner-editor:", req.session);
-  if (!req.session.passport || !req.session.passport.user) {
-    return res.status(401).send('Unauthorized. Please login first.');
-  }
-  const authToken = req.session.passport.user.accessToken;
+  
+  // Use the stored access token
+  const authToken = currentAccessToken;
+
   if (!authToken || typeof authToken !== 'string') {
-    return res.status(500).send('Invalid authentication token.');
+      return res.status(500).send('Invalid authentication token.');
+  }
+  const projectId = req.query.projectId;  // Get the project ID from the query parameter
+  if (!projectId) {
+      return res.status(400).send('Project ID is required.');
   }
   console.log(`-------------------- ${authToken} ------------------`);
-  res.render('floorplannerEditor', { authToken });  // Removed the test variable
+  res.render('floorplannerEditor', { authToken, projectId });
 });
 
 app.use('/user', userRoutes);
 app.use('/project', projectRoutes);
+
+// Error Handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

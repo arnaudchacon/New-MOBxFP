@@ -7,6 +7,53 @@ const { basicAuth } = require('../services/floorplannerService');  // Adjust pat
 
 console.log('Project Controller: Initialized');
 
+// Show the form for creating a new project
+exports.showCreateForm = async (req, res) => {
+    try {
+        // Assuming you have a view template named 'createProjectForm.ejs'
+        res.render('createProjectForm');
+    } catch (error) {
+        console.error('Error displaying the project creation form:', error);
+        res.status(500).send('Error displaying the project creation form');
+    }
+};
+
+// Handle the form submission, create the project in Floorplanner, and then redirect the user
+exports.createAndRedirect = async (req, res) => {
+    try {
+        const { name, description, email } = req.body; // Assuming the form fields are 'name', 'description', and 'email'
+        const userId = req.user.userId; // Fetch the user ID from the session (assuming you have user authentication in place)
+
+        console.log(`Creating project with name: ${name}, for user ID: ${userId}`);
+
+        const floorplannerResponse = await createFloorplan(name, description);
+        console.log(`Floorplanner project created with ID: ${floorplannerResponse.id}`);
+
+        const project = await Project.create({
+            name,
+            description,
+            email, // Storing the user's email with the project (if you want to)
+            userId,
+            floorplannerId: floorplannerResponse.id
+        });
+
+        // Fetch the project-specific token for redirection
+        const response = await axios.get(`https://floorplanner.com/api/v2/projects/${floorplannerResponse.id}/token.json`, {
+            headers: {
+                'Authorization': basicAuth,
+                'accept': 'application/json'
+            }
+        });
+        const projectToken = response.data.token;
+
+        // Redirect the user to the Floorplanner editor with the token
+        res.redirect(`https://floorplanner.com/api/v2/projects/${floorplannerResponse.id}/editor?token=${projectToken}`);
+    } catch (error) {
+        console.error('Error creating project and redirecting:', error);
+        res.status(500).send('Error creating project and redirecting');
+    }
+};
+
 // Fetch project-specific token
 exports.fetchProjectToken = async (req, res) => {
   try {
