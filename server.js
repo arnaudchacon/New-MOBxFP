@@ -71,7 +71,7 @@ async function fetchProjectToken(projectId, oauthToken) {
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  res.render('dashboard');
 });
 
 app.get('/test',(req, res) => {
