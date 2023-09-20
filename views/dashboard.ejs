@@ -29,29 +29,43 @@
             border-radius: 10px;
         }
 
+        /* Mobilis Header */
+        .mobilis {
+            position: absolute;
+            right: 2%;
+            top: 2%;
+            font-size: 3em;
+            font-weight: 700;
+        }
+
         /* Steps */
         .step {
             position: absolute;
-            right: 10%;
+            right: 20%;  /* Adjusted the position */
             background-color: #fff;
-            padding: 20px;
+            padding: 25px;  /* Made the padding bigger */
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 230px;  /* Made it slightly wider */
-            font-size: 1.2em;
+            width: 250px;  /* Made the width bigger */
+            font-size: 1.4em;  /* Increased font size */
             transition: transform 0.3s;
         }
 
         .step1 {
-            top: 25%;
+            top: 35%;
         }
 
         .step2 {
-            top: 42%;  /* Adjusted the position */
+            top: 50%;
         }
 
         .step3 {
-            top: 59%;  /* Adjusted the position */
+            top: 65%;
+        }
+
+        /* Bold the etape numbers */
+        .bold {
+            font-weight: bold;
         }
 
         /* Hover effect for steps */
@@ -67,7 +81,7 @@
             border-radius: 8px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
             max-width: 500px;
-            margin: 120px auto;  /* Lowered the form */
+            margin: 140px 10%;  /* Lowered and moved the form to the left */
         }
 
         label {
@@ -102,11 +116,12 @@
 </head>
 <body>
     <h1>UTILISEZ NOTRE INTELLIGENCE ARTIFICIELLE</h1>
+    <div class="mobilis">MOBILIS</div>
 
     <!-- Steps -->
-    <div class="step step1">Étape 1: Entrez le nom et la description de votre projet.</div>
-    <div class="step step2">Étape 2: Cliquez sur 'Submit'.</div>
-    <div class="step step3">Étape 3: Préparez-vous à utiliser notre IA!</div>
+    <div class="step step1"><span class="bold">Étape 1:</span> Entrez le nom et la description de votre projet.</div>
+    <div class="step step2"><span class="bold">Étape 2:</span> Cliquez sur 'Submit'.</div>
+    <div class="step step3"><span class="bold">Étape 3:</span> Préparez-vous à utiliser notre IA!</div>
     
     <!-- Centered Form -->
     <form id="projectForm">
