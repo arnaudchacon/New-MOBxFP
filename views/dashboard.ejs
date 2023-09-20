@@ -17,6 +17,21 @@
             color: #24368c;
         }
 
+        /* Main Title Styles */
+        h1 {
+            position: absolute;
+            left: 5%;
+            bottom: 5%;
+            transform: rotate(-90deg);
+            transform-origin: left bottom;
+            font-size: 2.5em;
+            font-weight: 700;
+            background: rgba(255,255,255,0.7);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+
         /* Form Styles */
         form {
             background-color: #fff;
@@ -55,16 +70,7 @@
             background-color: #555;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 50px;
-            font-size: 2em;
-            background: rgba(255,255,255,0.7);
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-        }
-
+        /* Bubbles explaining the steps */
         .bubble {
             background-color: rgba(255,255,255,0.7);
             padding: 15px;
@@ -76,18 +82,30 @@
         }
 
         .bubble.step1 {
-            top: 10%;
+            top: 20%;
             left: 5%;
         }
 
         .bubble.step2 {
-            top: 10%;
-            right: 5%;
+            top: 50%;
+            left: 5%;
         }
 
         .bubble.step3 {
-            bottom: 10%;
+            bottom: 20%;
             left: 5%;
+        }
+
+        .ai-explanation {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255,255,255,0.7);
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
         }
 
     </style>
@@ -96,9 +114,13 @@
     <h1>UTILISEZ NOTRE INTELLIGENCE ARTIFICIELLE</h1>
 
     <!-- Bubbles explaining the steps -->
-    <div class="bubble step1">Step 1: Enter your project name and description.</div>
-    <div class="bubble step2">Step 2: Click on 'Submit'.</div>
-    <div class="bubble step3">Step 3: Get ready to use our AI!</div>
+    <div class="bubble step1">Étape 1: Entrez le nom et la description de votre projet.</div>
+    <div class="bubble step2">Étape 2: Cliquez sur 'Submit'.</div>
+    <div class="bubble step3">Étape 3: Préparez-vous à utiliser notre IA!</div>
+
+    <div class="ai-explanation">
+        Une fois redirigé vers l'éditeur intégré, notre IA vous aidera à créer le design parfait pour votre espace. Profitez de la technologie avancée pour obtenir des résultats exceptionnels.
+    </div>
     
     <!-- Centered Form -->
     <form id="projectForm">
