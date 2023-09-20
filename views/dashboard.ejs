@@ -20,11 +20,11 @@
         h1 {
             position: absolute;
             left: 2%;
-            top: 20%;
-            font-size: 3em;
+            top: 30%;
+            font-size: 4em;
             font-weight: 700;
             writing-mode: vertical-lr;
-            text-orientation: upright;
+            text-orientation: sideways-left;
             background-color: #24368c;
             color: white;
             padding: 10px 40px;
@@ -36,10 +36,10 @@
             position: absolute;
             right: 10%;
             background-color: #fff;
-            padding: 30px;
+            padding: 20px;
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 250px;
+            width: 200px;
             font-size: 1.2em;
             transition: transform 0.3s;
         }
@@ -49,26 +49,17 @@
         }
 
         .step2 {
-            top: 40%;
+            top: 45%;
         }
 
         .step3 {
-            top: 50%;
+            top: 60%;
         }
 
-        /* AI Explanation */
-        .ai-explanation {
-            position: absolute;
-            bottom: 10%;
-            left: 20%;
-            background-color: #fff;
-            padding: 30px;
-            border: 2px solid #000;
-            font-size: 1em;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-            width: 600px;
-            height: 200px;
-            clip-path: polygon(0% 0%, 75% 0%, 75% 20%, 100% 30%, 75% 40%, 75% 100%, 0% 100%);
+        /* Hover effect for steps */
+        .step:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* Form Styles */
@@ -118,11 +109,6 @@
     <div class="step step1">Étape 1: Entrez le nom et la description de votre projet.</div>
     <div class="step step2">Étape 2: Cliquez sur 'Submit'.</div>
     <div class="step step3">Étape 3: Préparez-vous à utiliser notre IA!</div>
-
-    <!-- AI Explanation -->
-    <div class="ai-explanation">
-        Une fois redirigé vers l'éditeur intégré, notre IA vous aidera à créer le design parfait pour votre espace. Profitez de la technologie avancée pour obtenir des résultats exceptionnels.
-    </div>
     
     <!-- Centered Form -->
     <form id="projectForm">
