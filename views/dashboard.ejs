@@ -3,36 +3,17 @@
 <head>
     <title>MOBILIS Dashboard</title>
     <style>
-        /* Background Styles */
-        body:before {
-            content: "";
-            position: fixed;
-            inset: -50px;
-            background:
-             repeating-radial-gradient(#000 0 0.0001%,#fff 0 0.0002%)
-              60% 60%/3000px 3000px,
-             repeating-conic-gradient(#000 0 0.0001%,#fff 0 0.0002%)
-              40% 40%/4000px 3000px;
-            background-blend-mode: difference;
-            filter: blur(2px) contrast(100) brightness(40);
-            mix-blend-mode: lighten;
-        }
-
+        /* Body Styles */
         body {
-            background: #24368c;
-            color: orange;  /* Change text color to orange */
             font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
             margin: 0;
-            min-height: 100vh;
-        }
-
-        html {
-            background: #fff;
+            padding: 0;
         }
 
         /* Form Styles */
         form {
-            background-color: #ffffff;  /* Solid white background for the form */
+            background-color: #fff;
             padding: 40px 60px;
             border-radius: 8px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
@@ -56,7 +37,7 @@
 
         button {
             background-color: #333;
-            color: orange;  /* Change button text color to orange for consistency */
+            color: white;
             border: none;
             padding: 15px 30px;
             border-radius: 5px;
@@ -76,7 +57,7 @@
 </head>
 <body>
     <h1>UTILISEZ NOTRE INTELLIGENCE ARTIFICIELLE</h1>
-
+    
     <!-- Centered Form -->
     <form id="projectForm">
         <label for="projectName">Project Name:</label>
@@ -126,7 +107,7 @@
             .catch(error => {
                 // This will now capture any error messages, be it from the server or any other issue
                 alert('Error starting new project: ' + error.message);
-            });
+            });            
         });
     </script>
 </body>
