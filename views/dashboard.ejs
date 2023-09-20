@@ -7,11 +7,12 @@
         /* Body Styles */
         body {
             font-family: Montserrat, sans-serif;
-            background-image: linear-gradient(45deg, transparent 20%, #24368c 25%, transparent 25%),
-                              linear-gradient(-45deg, transparent 20%, #24368c 25%, transparent 25%),
-                              linear-gradient(-45deg, transparent 75%, #24368c 80%, transparent 0),
-                              radial-gradient(#24368c 2px, transparent 0);
-            background-size: 30px 30px, 30px 30px;
+            background-image: linear-gradient(45deg, transparent 20%, #24368c 24%, transparent 25%),
+                              linear-gradient(-45deg, transparent 20%, #24368c 24%, transparent 25%),
+                              linear-gradient(-45deg, transparent 75%, #24368c 79%, transparent 80%),
+                              radial-gradient(at 25% 25%, #24368c 2px, transparent 0),
+                              radial-gradient(at 75% 75%, #24368c 2px, transparent 0);
+            background-size: 30px 60px, 30px 60px;
             margin: 0;
             padding: 0;
             color: #24368c;
@@ -40,6 +41,11 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .step:hover {
+            transform: scale(1.05);
         }
 
         .step1 {
@@ -86,6 +92,11 @@
             border-radius: 0 50% 50% 0;
             font-size: 1em;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .ai-explanation:hover {
+            transform: scale(1.05);
         }
 
         /* Form Styles */
