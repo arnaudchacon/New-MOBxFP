@@ -113,7 +113,7 @@ app.get('/fetch-project-token', async (req, res) => {
 
 app.post('/create-floorplanner-project', async (req, res) => {
   // Use the stored access token
-  const accessToken = currentAccessToken;
+  const accessToken = process.env.SERVICE_ACCOUNT_TOKEN;
 
   if (!accessToken) {
       return res.status(401).json({ message: "Not Authenticated" });
