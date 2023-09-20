@@ -20,15 +20,71 @@
         /* Main Title Styles */
         h1 {
             position: absolute;
-            left: 5%;
-            bottom: 5%;
+            left: 2%;
+            bottom: 15%;
             transform: rotate(-90deg);
             transform-origin: left bottom;
-            font-size: 2.5em;
+            font-size: 2em;
             font-weight: 700;
-            background: rgba(255,255,255,0.7);
+            background-color: #24368c;
+            color: white;
             padding: 10px;
             border-radius: 8px;
+        }
+
+        /* Chronology Steps */
+        .step {
+            position: absolute;
+            top: 10%;
+            background-color: #f6f6f6;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .step1 {
+            left: 10%;
+        }
+
+        .step2 {
+            left: 40%;
+        }
+
+        .step3 {
+            right: 10%;
+        }
+
+        /* Arrows */
+        .step1:after, .step2:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -40px;
+            width: 30px;
+            height: 2px;
+            background-color: #24368c;
+            transform: translateY(-50%);
+        }
+
+        .step1:before, .step2:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid #24368c;
+        }
+
+        /* AI Explanation */
+        .ai-explanation {
+            position: absolute;
+            right: 5%;
+            top: 60%;
+            background-color: #f6f6f6;
+            padding: 30px;
+            border-radius: 0 50% 50% 0;
+            font-size: 1em;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
         }
 
@@ -70,54 +126,17 @@
             background-color: #555;
         }
 
-        /* Bubbles explaining the steps */
-        .bubble {
-            background-color: rgba(255,255,255,0.7);
-            padding: 15px;
-            border-radius: 50%;
-            position: absolute;
-            max-width: 200px;
-            font-size: 0.9em;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .bubble.step1 {
-            top: 20%;
-            left: 5%;
-        }
-
-        .bubble.step2 {
-            top: 50%;
-            left: 5%;
-        }
-
-        .bubble.step3 {
-            bottom: 20%;
-            left: 5%;
-        }
-
-        .ai-explanation {
-            position: absolute;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(255,255,255,0.7);
-            padding: 20px;
-            border-radius: 8px;
-            font-size: 1em;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-        }
-
     </style>
 </head>
 <body>
     <h1>UTILISEZ NOTRE INTELLIGENCE ARTIFICIELLE</h1>
 
-    <!-- Bubbles explaining the steps -->
-    <div class="bubble step1">Étape 1: Entrez le nom et la description de votre projet.</div>
-    <div class="bubble step2">Étape 2: Cliquez sur 'Submit'.</div>
-    <div class="bubble step3">Étape 3: Préparez-vous à utiliser notre IA!</div>
+    <!-- Chronology Steps -->
+    <div class="step step1">Étape 1: Entrez le nom et la description de votre projet.</div>
+    <div class="step step2">Étape 2: Cliquez sur 'Submit'.</div>
+    <div class="step step3">Étape 3: Préparez-vous à utiliser notre IA!</div>
 
+    <!-- AI Explanation -->
     <div class="ai-explanation">
         Une fois redirigé vers l'éditeur intégré, notre IA vous aidera à créer le design parfait pour votre espace. Profitez de la technologie avancée pour obtenir des résultats exceptionnels.
     </div>
