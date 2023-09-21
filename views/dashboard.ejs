@@ -136,7 +136,6 @@
 
     <script>
         document.getElementById("projectForm").addEventListener("submit", function(event) {
-            console.log("Form submitted!");
             event.preventDefault();  // Prevent default form submission
 
             // Collect form data
@@ -152,15 +151,7 @@
                 },
                 body: JSON.stringify(formData)
             })
-            .then(response => {
-                if (!response.ok) {
-                    // This will capture server errors and response is not a valid JSON
-                    return response.text().then(text => {
-                        throw new Error(text);
-                    });
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.editorUrl) {
                     // Redirect the user to the Floorplanner editor with the provided URL
@@ -170,10 +161,9 @@
                 }
             })
             .catch(error => {
-                // This will now capture any error messages, be it from the server or any other issue
                 alert('Error starting new project: ' + error.message);
             });            
         });
-    </script>
+</script>
 </body>
 </html>

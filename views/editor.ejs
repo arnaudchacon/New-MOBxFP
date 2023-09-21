@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MOBILIS Editor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Add other necessary styles or scripts -->
+</head>
+<body>
+    <!-- Branding or any other UI elements you'd like to add -->
+    <h1>MOBILIS Editor</h1>
+
+    <!-- Floorplanner Editor Embed -->
+    <div id="fp-editor-container" style="width: 1000px; height: 800px;"></div>
+    <script data-floorplanner-editor src="https://fp-editor-cdn.floorplanner.com/embed.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+       initFPEditor({
+          projectId: <%= projectId %>,  // This is dynamically populated from the server
+          mountSelector: '#fp-editor-container',
+          user: {
+              id: 78673989,  // Your user ID
+              auth_token: "<%= authToken %>",  // This is dynamically populated from the server
+              permissions: ['save'],
+          },
+          language: 'en-US',
+          templateId: 35268,  // Your template ID
+          brandingId: 335013,  // Your branding ID
+          // ... Any other customization settings
+       }).then(api => (window.api = api));
+    </script>
+
+    <!-- Additional scripts or functionalities you'd like to add -->
+</body>
+</html>

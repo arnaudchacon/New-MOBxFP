@@ -76,7 +76,7 @@ app.get('/', (req, res) => {
 
 app.get('/test',(req, res) => {
   res.render("test",{testData: "this is a test"})
-})
+});
 
 app.get('/auth/provider', passport.authenticate('provider'));
 
@@ -91,28 +91,23 @@ app.get('/floorplanner/callback',
     res.redirect('/dashboard');  // Redirect to dashboard after successful authentication
   }
 );
-
 app.get('/fetch-project-token', async (req, res) => {
-  const oauthToken = currentAccessToken;  // Use the stored access token
-
-  console.log("Fetching project token with OAuth token:", oauthToken);  // Log the OAuth token here
+  const oauthToken = currentAccessToken;
 
   if (!oauthToken) {
     return res.status(400).json({ message: 'OAuth token not found.' });
   }
 
   try {
-      const projectToken = await fetchProjectToken(projectId, oauthToken);
-      console.log("Fetched project token:", projectToken);  // Log the fetched project token here
+      const projectToken = await fetchProjectToken(req.query.projectId, oauthToken);
       return res.json({ projectToken });
   } catch (error) {
-      console.error("Error fetching project token:", error.message);  // Enhanced logging
+      console.error("Error fetching project token:", error.message);
       return res.status(500).json({ message: error.message });
   }
 });
 
 app.post('/create-floorplanner-project', async (req, res) => {
-  // Use the stored access token
   const accessToken = process.env.SERVICE_ACCOUNT_TOKEN;
 
   if (!accessToken) {
@@ -120,13 +115,12 @@ app.post('/create-floorplanner-project', async (req, res) => {
   }
 
   try {
-      // Create a new project on Floorplanner
       const response = await fetch('https://floorplanner.com/api/v2/projects.json', {
           method: 'POST',
           headers: {
               'accept': 'application/json',
               'content-type': 'application/json',
-              'Authorization': `Bearer ${accessToken}`  // Use Bearer token for authorization
+              'Authorization': `Bearer ${accessToken}`
           },
           body: JSON.stringify({
               project: {
@@ -142,23 +136,13 @@ app.post('/create-floorplanner-project', async (req, res) => {
           console.error("Error creating project:", data);
           return res.status(response.status).json(data);
       } else {
-          // Fetch project-specific token for the created project
-          const projectTokenResponse = await fetch(`https://floorplanner.com/api/v2/projects/${data.id}/token.json`, {
-              method: 'GET',
-              headers: {
-                  'Authorization': `Bearer ${accessToken}`,
-                  'Accept': 'application/json'
-              }
-          });
-
-          const projectTokenData = await projectTokenResponse.json();
-          if (!projectTokenData.token) {
-              throw new Error('Failed to fetch project token from Floorplanner');
-          }
-
-          // Redirect to the Floorplanner editor with the new project ID and token
-          return res.json({ 
-            editorUrl: `/floorplanner-editor?projectId=${data.id}&projectToken=${projectTokenData.token}`
+          const userId = 78673989;
+          const templateId = 35268;
+          res.render('editor', {
+            projectId: data.id,
+            userId: userId,
+            authToken: currentAccessToken,
+            templateId: templateId
           });
       }
   } catch (error) {
@@ -167,39 +151,8 @@ app.post('/create-floorplanner-project', async (req, res) => {
   }
 });
 
-
-app.get('/floorplanner', (req, res) => {
-  console.log("Session in /floorplanner:", req.session);
-  
-  // Use the stored access token
-  const authToken = currentAccessToken;
-
-  if (!authToken) {
-    return res.redirect('/auth/provider');
-  }
-
-  res.sendFile(path.join(__dirname, 'public', 'floorplanner.html'));
-});
-
 app.get('/dashboard', (req, res) => {
   res.render('dashboard');
-});
-
-app.get('/floorplanner-editor', (req, res) => {
-  console.log("Session in /floorplanner-editor:", req.session);
-  
-  // Use the stored access token
-  const authToken = currentAccessToken;
-
-  if (!authToken || typeof authToken !== 'string') {
-      return res.status(500).send('Invalid authentication token.');
-  }
-  const projectId = req.query.projectId;  // Get the project ID from the query parameter
-  if (!projectId) {
-      return res.status(400).send('Project ID is required.');
-  }
-  console.log(`-------------------- ${authToken} ------------------`);
-  res.render('floorplannerEditor', { authToken, projectId });
 });
 
 app.use('/user', userRoutes);
