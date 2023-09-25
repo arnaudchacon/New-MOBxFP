@@ -84,20 +84,16 @@ app.get('/floorplanner/callback',
   passport.authenticate('provider', { failureRedirect: '/' }),
   (req, res) => {
     console.log("User object after OAuth callback:", req.session.passport.user);
-    
-    // Store the access token in the global variable
     currentAccessToken = req.session.passport.user.accessToken;
-
-    res.redirect('/dashboard');  // Redirect to dashboard after successful authentication
+    res.redirect('/dashboard');
   }
 );
+
 app.get('/fetch-project-token', async (req, res) => {
   const oauthToken = currentAccessToken;
-
   if (!oauthToken) {
     return res.status(400).json({ message: 'OAuth token not found.' });
   }
-
   try {
       const projectToken = await fetchProjectToken(req.query.projectId, oauthToken);
       return res.json({ projectToken });
@@ -107,13 +103,19 @@ app.get('/fetch-project-token', async (req, res) => {
   }
 });
 
+app.get('/go-to-floorplanner-editor', (req, res) => {
+    res.redirect('/create-floorplanner-project');
+});
+
+app.get('/go-to-roomplanner', (req, res) => {
+    res.redirect('https://yoursubdomain.roomplanner.dev'); 
+});
+
 app.post('/create-floorplanner-project', async (req, res) => {
   const accessToken = process.env.SERVICE_ACCOUNT_TOKEN;
-
   if (!accessToken) {
       return res.status(401).json({ message: "Not Authenticated" });
   }
-
   try {
       const response = await fetch('https://floorplanner.com/api/v2/projects.json', {
           method: 'POST',
@@ -129,9 +131,7 @@ app.post('/create-floorplanner-project', async (req, res) => {
               }
           })
       });
-
       const data = await response.json();
-
       if (!response.ok) {
           console.error("Error creating project:", data);
           return res.status(response.status).json(data);
@@ -158,7 +158,6 @@ app.get('/dashboard', (req, res) => {
 app.use('/user', userRoutes);
 app.use('/project', projectRoutes);
 
-// Error Handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');

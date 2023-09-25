@@ -123,47 +123,31 @@
     <div class="step step2"><span class="bold">Étape 2:</span> Cliquez sur 'Submit'.</div>
     <div class="step step3"><span class="bold">Étape 3:</span> Préparez-vous à utiliser notre IA!</div>
     
-    <!-- Centered Form -->
-    <form id="projectForm">
-        <label for="projectName">Project Name:</label>
-        <input type="text" id="projectName" name="name" required>
+<!-- Centered Form -->
+<form id="projectForm">
+    <label for="userEmail">Entrez votre adresse e-mail:</label>
+    <input type="email" id="userEmail" name="email" required style="width: 80%;">
 
-        <label for="projectDescription">Description:</label>
-        <textarea id="projectDescription" name="description" rows="4" required></textarea>
+    <label for="projectName">Nom du projet:</label>
+    <input type="text" id="projectName" name="name" required>
 
-        <button type="submit">Submit</button>
-    </form>
+    <label for="projectDescription">Description:</label>
+    <textarea id="projectDescription" name="description" rows="4" required></textarea>
+
+    <button type="button" id="goToEditor">Go to Editor</button>
+    <button type="button" id="goToRoomplanner">Go to Roomplanner</button>
+</form>
 
     <script>
-        document.getElementById("projectForm").addEventListener("submit", function(event) {
-            event.preventDefault();  // Prevent default form submission
-
-            // Collect form data
-            const formData = {
-                name: document.getElementById("projectName").value,
-                description: document.getElementById("projectDescription").value
-            };
-
-            fetch('/create-floorplanner-project', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.editorUrl) {
-                    // Redirect the user to the Floorplanner editor with the provided URL
-                    window.location.href = data.editorUrl;
-                } else if (data.message) {
-                    alert('Error starting new project: ' + data.message);
-                }
-            })
-            .catch(error => {
-                alert('Error starting new project: ' + error.message);
-            });            
+        document.getElementById("goToEditor").addEventListener("click", function() {
+            // For simplicity, we're just redirecting to the editor for now:
+            window.location.href = '/go-to-floorplanner-editor';
         });
-</script>
+
+        document.getElementById("goToRoomplanner").addEventListener("click", function() {
+            // For simplicity, we're just redirecting to the roomplanner for now:
+            window.location.href = '/go-to-roomplanner'; 
+        });
+    </script>
 </body>
 </html>
