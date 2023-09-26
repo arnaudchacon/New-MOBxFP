@@ -108,7 +108,7 @@ app.get('/go-to-floorplanner-editor', (req, res) => {
 });
 
 app.get('/go-to-roomplanner', (req, res) => {
-    res.redirect('https://yoursubdomain.roomplanner.dev'); 
+    res.redirect('https://moltow.floorplanner.com');
 });
 
 app.post('/create-floorplanner-project', async (req, res) => {
