@@ -1,0 +1,174 @@
+# Note préliminaire concernant les tests de l'application : 
+# Dans le cadre du développement de cette application, plusieurs fonctionnalités ont été conçues pour interagir avec le service Floorplanner.
+# Pour assurer une validation complète et approfondie de ces fonctionnalités, un nombre suffisant de crédits Floorplanner est indispensable. 
+# Cependant, lors des dernières étapes de développement, les crédits nécessaires pour effectuer ces tests n'étaient pas disponibles
+# Ainsi, bien que l'application ait été développée en suivant les meilleures pratiques et en visant la robustesse, nous recommandons une phase de test complémentaire une fois que l'accès aux crédits Floorplanner sera rétabli.
+# Cette démarche est essentielle pour garantir la performance optimale de l'application dans toutes les situations d'utilisation. 
+# Nous tenons à assurer tous les utilisateurs et les parties prenantes de notre engagement à fournir un travail de qualité, et nous espérons que cette note fournira les éclaircissements nécessaires pour comprendre les circonstances actuelles.
+
+server.js:
+# Ce fichier sert de point d'entrée principal pour l'application web. Il est responsable de la configuration et du démarrage du serveur web, ainsi que de la gestion des requêtes entrantes. Voici une explication détaillée des éléments clés :
+# Importations de modules : Plusieurs modules et bibliothèques externes sont importés pour être utilisés dans ce fichier. Par exemple, express est un framework pour construire des applications web, passport et passport-oauth2 sont utilisés pour gérer l'authentification OAuth2, fetch est utilisé pour faire des requêtes HTTP, etc.
+# Initialisation : app est une instance de l'application Express. PORT détermine le port sur lequel le serveur va écouter.
+
+# Middleware : 
+    # L'application utilise plusieurs middlewares pour traiter les requêtes : 
+    # cors : permet de gérer les requêtes cross-origin. 
+    # express.json() : permet de traiter les corps de requêtes JSON. 
+    # express.static : sert les fichiers statiques depuis le répertoire public. 
+    # session : gère les sessions utilisateur. passport.initialize() 
+    # passport.session() : initialise Passport pour l'authentification.
+
+# Configuration de Passport : 
+    #Passport est configuré pour utiliser la stratégie OAuth2, ce qui permet à l'application de s'authentifier avec Floorplanner via OAuth. 
+    #Routes : Plusieurs routes sont définies pour gérer les différentes requêtes de l'application. 
+            #Par exemple, la route / affiche le tableau de bord, /auth/provider déclenche le processus d'authentification OAuth, et /create-floorplanner-project crée un nouveau projet sur Floorplanner. 
+    #Gestion des erreurs : Si une erreur est levée pendant le traitement d'une requête, elle est capturée et traitée par le middleware d'erreur à la fin du fichier. 
+    #Démarrage du serveur : app.listen démarre le serveur sur le port spécifié. 
+    #Connexion à la base de données : La dernière partie du fichier tente d'établir une connexion à la base de données et affiche un message en cas de succès ou d'échec.
+
+# Points importants : 
+    #L'utilisation de passport et passport-oauth2 montre que l'application utilise l'authentification OAuth2, ce qui est essentiel pour interagir avec des services tiers comme Floorplanner. 
+    #La configuration des routes est cruciale car elle détermine comment l'application répond aux différentes requêtes des utilisateurs. 
+    #La gestion des erreurs est essentielle pour assurer la robustesse de l'application et pour fournir des messages d'erreur utiles aux utilisateurs et aux développeurs.
+
+
+dashboard.ejs
+# Ce fichier est un template EJS (Embedded JavaScript) qui sert de page de tableau de bord pour l'application. Il permet aux utilisateurs d'entrer leur adresse e-mail et de choisir entre deux outils : 
+    #Roomplanner et Editor. 
+    #Voici une explication détaillée des éléments clés :
+
+# En-tête : 
+    #Titre : Le titre de la page est défini comme "MOBILIS Dashboard". 
+    #Lien vers une police : La police "Montserrat" est importée depuis Google Fonts pour être utilisée dans le style de la page.
+
+# Styles :
+    #Styles du corps : Le corps de la page a une animation de fond appelée movingShadow qui donne l'effet d'une ombre se déplaçant lentement. Les autres styles définissent la police, la couleur, et le centrage du contenu.
+    #Styles du formulaire : Ces styles définissent l'apparence du formulaire, notamment le fond, le padding, et les bordures. Les inputs ont également un style spécifique.
+    #Styles des boutons : Les boutons ont une couleur de fond, une couleur de texte, et une animation au survol.
+
+# Corps :
+    #Formulaire : Le formulaire contient une étiquette et un champ pour l'adresse e-mail de l'utilisateur. Il y a aussi deux boutons, l'un pour l'Editor et l'autre pour Roomplanner. 
+    #Textes explicatifs : Deux paragraphes fournissent une brève explication des outils Roomplanner et Editor.
+
+# Scripts :
+    #Les scripts sont utilisés pour ajouter des fonctionnalités interactives à la page. Ici, les scripts ajoutent des écouteurs d'événements aux boutons pour rediriger l'utilisateur vers les outils appropriés lorsqu'ils sont cliqués.
+
+# Points importants : 
+# L'utilisation de EJS permet d'intégrer facilement du JavaScript dans le HTML, offrant une flexibilité pour la génération de pages web dynamiques. 
+# La page est conçue pour être simple et intuitive, guidant l'utilisateur à choisir entre deux outils principaux. 
+# Les styles et les animations améliorent l'esthétique et l'expérience utilisateur de la page.
+
+
+floorplannerEditor.ejs
+#Ce fichier est un template EJS destiné à intégrer l'éditeur Floorplanner dans l'application. L'éditeur permet aux utilisateurs de visualiser et de modifier des projets en 3D. Voici une explication détaillée des éléments clés :
+
+#En-tête : 
+    #Méta-informations : Il y a des balises méta pour définir le type de contenu et la mise à l'échelle pour les appareils mobiles.
+
+#Styles : 
+    #Styles du corps : Le corps de la page est conçu pour centrer le conteneur de l'éditeur verticalement et horizontalement. Une couleur de fond et d'autres styles de base sont également définis. 
+    #Conteneur de l'éditeur : Le conteneur de l'éditeur a des dimensions spécifiées, un ombrage et d'autres styles pour le rendre visuellement attrayant.
+
+#Corps : 
+    #Conteneur de l'éditeur : C'est l'endroit où l'éditeur Floorplanner sera intégré. 
+    #Message d'erreur : Un élément de paragraphe est prévu pour afficher les éventuels messages d'erreur lors de l'initialisation de l'éditeur.
+
+#Scripts : 
+    #Intégration de l'éditeur Floorplanner : Un script est importé depuis le CDN de Floorplanner pour permettre l'intégration de l'éditeur. 
+    #Initialisation de l'éditeur : Un script personnalisé est utilisé pour initialiser l'éditeur. Il récupère l'ID du projet et le token du projet à partir des paramètres de l'URL, puis utilise ces informations pour configurer et lancer l'éditeur. En cas d'erreur (par exemple, si l'ID du projet ou le token sont manquants), un message d'erreur est affiché.
+
+#Points importants : 
+    #L'utilisation d'EJS permet une intégration flexible et dynamique de l'éditeur Floorplanner. La page est conçue pour offrir une expérience utilisateur fluide en intégrant directement l'éditeur dans une application web. 
+    #La gestion des erreurs garantit que l'utilisateur reçoit des feedbacks appropriés en cas de problèmes lors de l'utilisation de l'éditeur. 
+    #L'initialisation dynamique de l'éditeur basée sur les paramètres de l'URL offre une flexibilité pour travailler avec différents projets.
+
+floorplannerService.js:
+#Ce fichier est un module JavaScript qui interagit directement avec l'API de Floorplanner pour gérer diverses opérations liées aux projets Floorplanner. Il fournit des fonctions pour créer, éditer, supprimer des plans d'étage et passer une commande Vloor. Voici une explication détaillée des éléments clés :
+
+#Préparation pour l'Authentification : 
+    #Les identifiants API de Floorplanner (nom d'utilisateur et mot de passe) sont récupérés depuis les variables d'environnement. 
+    #Une chaîne d'authentification de base est préparée à l'aide de ces identifiants.
+
+#Instance Axios pour l'API de Floorplanner : 
+    #Une instance Axios est créée avec l'URL de base de l'API de Floorplanner et le header d'authentification préparé.
+
+#Fonctions : 
+    #createFloorplan : Crée un nouveau plan d'étage dans Floorplanner en utilisant l'API POST. 
+    #editFloorplan : Modifie un plan d'étage existant dans Floorplanner en utilisant l'API PUT. 
+    #deleteFloorplan : Supprime un plan d'étage existant dans Floorplanner en utilisant l'API DELETE. 
+    #createVloorOrder : Crée une nouvelle commande Vloor. C'est une nouvelle fonction qui permet de passer une commande spécifique à Vloor en utilisant l'API POST.
+
+#Exportation : 
+    #Les fonctions mentionnées ci-dessus sont exportées pour être utilisées dans d'autres parties de l'application. 
+    #L'authentification de base est également exportée, probablement pour être utilisée dans d'autres services ou routes.
+
+#En résumé, ce fichier est essentiel pour la communication entre votre application et Floorplanner. Il sert de pont entre votre application et les services de Floorplanner, permettant à votre application de gérer efficacement les plans d'étage et d'autres services connexes.
+
+
+projectController.js:
+#Ce fichier est un contrôleur qui gère les opérations CRUD (Création, Lecture, Mise à jour, Suppression) pour les projets, en intéraction avec l'API Floorplanner.
+
+#Imports nécessaires: 
+    #Importation des modèles, des services et des packages nécessaires pour faciliter la gestion des projets. 
+    #Axios est utilisé pour effectuer des requêtes HTTP, et les fonctions du service Floorplanner sont importées pour communiquer avec l'API Floorplanner.
+
+#showCreateForm: Cette fonction affiche un formulaire permettant à l'utilisateur de créer un nouveau projet.
+
+#createAndRedirect: Crée un projet sur Floorplanner. 
+#Enregistre le projet dans la base de données locale. 
+#Redirige l'utilisateur vers l'éditeur Floorplanner pour le projet nouvellement créé.
+
+#fetchProjectToken: 
+    #Récupère un jeton spécifique au projet pour permettre à l'utilisateur d'accéder à l'éditeur Floorplanner.
+
+#createProject: 
+    #Crée un nouveau projet. Communique avec l'API Floorplanner pour créer un projet correspondant. 
+    #Stocke le projet dans la base de données locale.
+
+#getProjects: Récupère tous les projets associés à un utilisateur spécifique.
+
+#editProject:
+    #Met à jour un projet existant.
+    #Communique avec l'API Floorplanner pour mettre à jour le projet correspondant.
+    #Met à jour le projet dans la base de données locale.
+
+#deleteProject:
+    #Supprime un projet.
+    #Communique avec l'API Floorplanner pour supprimer le projet correspondant.
+    #Supprime le projet de la base de données locale
+
+#Points Importants :
+    #Le contrôleur interagit étroitement avec l'API Floorplanner pour gérer les projets.
+    #Les opérations CRUD sont essentielles pour permettre aux utilisateurs de créer, lire, mettre à jour et supprimer des projets.
+    #La sécurité est assurée en utilisant des authentifications et des autorisations appropriées, notamment en vérifiant les identifiants des utilisateurs pour certaines opérations.
+
+____________________________
+____________________________
+
+
+Setup and Installation:
+Prerequisites (e.g., Node.js version, any global packages that need to be installed).
+Step-by-step instructions for setting up the project locally:
+Cloning the repository.
+Installing dependencies (npm install).
+Setting up environment variables (if needed).
+Running the project locally (npm start or equivalent).
+Any other necessary setup instructions.
+
+Deployment to Heroku:
+Create an account on Heroku.
+Install the Heroku CLI.
+Instructions on how to deploy the app to Heroku:
+Login to Heroku CLI: heroku login.
+Create a new app: heroku create app-name (replace app-name with a preferred name).
+Set environment variables on Heroku (if any): heroku config:set KEY=VALUE.
+Push the code to Heroku: git push heroku main.
+Open the app in a browser: heroku open.
+
+Floorplanner
+Add credits to the account and beware to change all sensitive data or manage access
+
+POST-trasfer Support
+If there are any questions about the installation or any issues with the application, please feel free to contact me and I will help. 
+
