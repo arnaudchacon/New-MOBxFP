@@ -1,7 +1,6 @@
 # Note préliminaire concernant les tests de l'application : 
 # Dans le cadre du développement de cette application, plusieurs fonctionnalités ont été conçues pour interagir avec le service Floorplanner.
 # Pour assurer une validation complète et approfondie de ces fonctionnalités, un nombre suffisant de crédits Floorplanner est indispensable. 
-# Cependant, lors des dernières étapes de développement, les crédits nécessaires pour effectuer ces tests n'étaient pas disponibles
 # Ainsi, bien que l'application ait été développée en suivant les meilleures pratiques et en visant la robustesse, nous recommandons une phase de test complémentaire une fois que l'accès aux crédits Floorplanner sera rétabli.
 # Cette démarche est essentielle pour garantir la performance optimale de l'application dans toutes les situations d'utilisation. 
 # Nous tenons à assurer tous les utilisateurs et les parties prenantes de notre engagement à fournir un travail de qualité, et nous espérons que cette note fournira les éclaircissements nécessaires pour comprendre les circonstances actuelles.
@@ -169,6 +168,6 @@ Open the app in a browser: heroku open.
 Floorplanner
 Add credits to the account and beware to change all sensitive data or manage access
 
-POST-trasfer Support
+POST-transfer Support
 If there are any questions about the installation or any issues with the application, please feel free to contact me and I will help. 
 
