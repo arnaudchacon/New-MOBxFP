@@ -119,7 +119,8 @@ app.get('/go-to-roomplanner', (req, res) => {
 
 
 app.post('/create-floorplanner-project', async (req, res) => {
-  const accessToken = process.env.SERVICE_ACCOUNT_TOKEN;
+  const accessToken = process.env.FLOORPLANNER_ACCESS_TOKEN;
+
   if (!accessToken) {
       return res.status(401).json({ message: "Not Authenticated" });
   }
