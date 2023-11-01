@@ -130,8 +130,9 @@
         });
 
         document.getElementById("goToRoomplanner").addEventListener("click", function() {
-            document.getElementById("roomplannerModal").style.display = "block";
+            window.location.href = 'https://moltow.floorplanner.com';
         });
+        
 
         document.getElementById("roomplannerModal").addEventListener("click", function(event) {
             if (event.target === event.currentTarget) {

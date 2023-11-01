@@ -43,7 +43,7 @@ passport.use('provider', new OAuth2Strategy({
   clientID: process.env.FLOORPLANNER_CLIENT_ID,
   clientSecret: process.env.FLOORPLANNER_CLIENT_SECRET,
   callbackURL: process.env.NODE_ENV === 'production' ? 
-  'https://mobilis-3207e30926a5.herokuapp.com/floorplanner/callback' : 
+  'https://mobilis-88e3349b918a.herokuapp.com//floorplanner/callback' : 
   'http://localhost:3000/floorplanner/callback',
   state: true
 },
