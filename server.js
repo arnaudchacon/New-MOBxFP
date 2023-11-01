@@ -108,8 +108,15 @@ app.get('/go-to-floorplanner-editor', (req, res) => {
 });
 
 app.get('/go-to-roomplanner', (req, res) => {
-    res.redirect('https://moltow.floorplanner.com');
+  const oauthURL = 'https://floorplanner.com/oauth/authorize';
+  const clientId = process.env.FLOORPLANNER_CLIENT_ID;
+  const redirectURI = process.env.NODE_ENV === 'production' ? 
+  'https://mobilis-3207e30926a5.herokuapp.com/floorplanner/callback' : 
+  'http://localhost:3000/floorplanner/callback';
+  const roomplannerURL = `${oauthURL}?client_id=${clientId}&redirect_uri=${redirectURI}&response_type=code`;
+  res.redirect(roomplannerURL);
 });
+
 
 app.post('/create-floorplanner-project', async (req, res) => {
   const accessToken = process.env.SERVICE_ACCOUNT_TOKEN;
