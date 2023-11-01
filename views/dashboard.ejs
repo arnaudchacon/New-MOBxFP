@@ -80,6 +80,28 @@
             text-align: center;
         }
 
+        /* Modal Styles */
+        #roomplannerModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        #roomplannerModal iframe {
+            width: 90%;
+            height: 80%;
+            frameborder: 0;
+            scrolling: yes;
+            position: absolute;
+            top: 10%;
+            left: 5%;
+        }
+
     </style>
 </head>
 <body>
@@ -97,13 +119,24 @@
         <p><strong>Editor:</strong> Une expérience de conception d'intérieur plus détaillée.</p>
     </div>
 
+    <!-- Modal HTML -->
+    <div id="roomplannerModal">
+        <iframe src="https://moltow.floorplanner.com"></iframe>
+    </div>
+
     <script>
         document.getElementById("goToEditor").addEventListener("click", function() {
             window.location.href = '/go-to-floorplanner-editor';
         });
 
         document.getElementById("goToRoomplanner").addEventListener("click", function() {
-            window.location.href = 'https://moltow.floorplanner.com';
+            document.getElementById("roomplannerModal").style.display = "block";
+        });
+
+        document.getElementById("roomplannerModal").addEventListener("click", function(event) {
+            if (event.target === event.currentTarget) {
+                document.getElementById("roomplannerModal").style.display = "none";
+            }
         });
     </script>
 </body>
