@@ -104,6 +104,8 @@
 
     </style>
 </head>
+
+</head>
 <body>
     <!-- Centered Form -->
     <form id="projectForm">
@@ -130,16 +132,10 @@
     });
 
     document.getElementById("goToRoomplanner").addEventListener("click", function() {
-        // Use fetch or another AJAX method to request the token from your server.
-        fetch("/get-floorplanner-token")
-        .then(response => response.json())
-        .then(data => {
-            if (data.token) {
-                window.location.href = 'https://moltow.floorplanner.com/login?token=' + data.token;
-            } else {
-                alert("Failed to retrieve the token. Please try again.");
-            }
-        });
+        // Instead of fetching a token for the user, use the token you got for your own login
+        // The token in the next line is just a placeholder, replace `'YOUR_TOKEN_HERE'` with your actual token
+        let myToken = 'CvoEUfanVGSonBhMmsUdRfWP7gwyeeK8TM8BLsLDkTk';
+        window.location.href = 'https://moltow.floorplanner.com/login?token=' + myToken;
     });
     
     document.getElementById("roomplannerModal").addEventListener("click", function(event) {

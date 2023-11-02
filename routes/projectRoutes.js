@@ -19,7 +19,7 @@ router.get('/create-form', auth, projectController.showCreateForm);
 router.post('/create-and-redirect', auth, projectController.createAndRedirect);
 
 // Route for fetching a project-specific token
-router.get('/fetch-project-token/:id', auth, projectController.fetchProjectToken);
+router.get('/get-floorplanner-token', auth, projectController.getFloorplannerToken);
 
 // Route to create a new project with a file upload
 router.post('/create', auth, upload.single('floorPlan'), projectController.createProject);
