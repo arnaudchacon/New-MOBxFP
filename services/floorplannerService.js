@@ -2,8 +2,8 @@ const axios = require('axios');
 const base64 = require('base-64');
 
 // Prepare Basic Authentication header
-const username = process.env.FLOORPLANNER_API_USERNAME; // Your Floorplanner API username from .env
-const password = process.env.FLOORPLANNER_API_PASSWORD; // Your Floorplanner API password from .env
+const username = process.env.FLOORPLANNER_API_USERNAME;
+const password = process.env.FLOORPLANNER_API_PASSWORD;
 const basicAuth = 'Basic ' + base64.encode(username + ':' + password);
 
 // Axios instance for Floorplanner API
@@ -14,7 +14,6 @@ const floorplannerAPI = axios.create({
   }
 });
 
-// Function to create a new floorplan
 const createFloorplan = async (name, description) => {
   try {
     const response = await floorplannerAPI.post('/projects', {
@@ -27,7 +26,6 @@ const createFloorplan = async (name, description) => {
   }
 };
 
-// Function to edit an existing floorplan
 const editFloorplan = async (floorplannerId, name, description) => {
   try {
     const response = await floorplannerAPI.put(`/projects/${floorplannerId}`, {
@@ -40,7 +38,6 @@ const editFloorplan = async (floorplannerId, name, description) => {
   }
 };
 
-// Function to delete an existing floorplan
 const deleteFloorplan = async (floorplannerId) => {
   try {
     await floorplannerAPI.delete(`/projects/${floorplannerId}`);
@@ -49,7 +46,6 @@ const deleteFloorplan = async (floorplannerId) => {
   }
 };
 
-// Function to create a Vloor order  // New function
 const createVloorOrder = async (projectId, image, imageType, width, name) => {
   try {
     const response = await floorplannerAPI.post('/services/vloor/orders/create.json', {
@@ -65,10 +61,24 @@ const createVloorOrder = async (projectId, image, imageType, width, name) => {
   }
 };
 
+// New Function to generate or fetch the token
+const getAccessTokenForProject = async (projectId) => {
+  try {
+    const response = await floorplannerAPI.post(`/projects/${projectId}/generate-token`);
+    if (response.status !== 200) {
+      throw new Error("Failed to generate token for project.");
+    }
+    return response.data.token;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createFloorplan,
   editFloorplan,
   deleteFloorplan,
-  createVloorOrder,  // New export
-  basicAuth           // Add this line to export basicAuth
+  createVloorOrder,
+  basicAuth,
+  getAccessTokenForProject  // Export the new function
 };

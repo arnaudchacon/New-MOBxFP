@@ -124,21 +124,29 @@
         <iframe src="https://moltow.floorplanner.com"></iframe>
     </div>
 
-    <script>
-        document.getElementById("goToEditor").addEventListener("click", function() {
-            window.location.href = '/go-to-floorplanner-editor';
-        });
+<script>
+    document.getElementById("goToEditor").addEventListener("click", function() {
+        window.location.href = '/go-to-floorplanner-editor';
+    });
 
-        document.getElementById("goToRoomplanner").addEventListener("click", function() {
-            window.location.href = 'https://moltow.floorplanner.com';
-        });
-        
-
-        document.getElementById("roomplannerModal").addEventListener("click", function(event) {
-            if (event.target === event.currentTarget) {
-                document.getElementById("roomplannerModal").style.display = "none";
+    document.getElementById("goToRoomplanner").addEventListener("click", function() {
+        // Use fetch or another AJAX method to request the token from your server.
+        fetch("/get-floorplanner-token")
+        .then(response => response.json())
+        .then(data => {
+            if (data.token) {
+                window.location.href = 'https://moltow.floorplanner.com/login?token=' + data.token;
+            } else {
+                alert("Failed to retrieve the token. Please try again.");
             }
         });
-    </script>
+    });
+    
+    document.getElementById("roomplannerModal").addEventListener("click", function(event) {
+        if (event.target === event.currentTarget) {
+            document.getElementById("roomplannerModal").style.display = "none";
+        }
+    });
+</script>
 </body>
 </html>
